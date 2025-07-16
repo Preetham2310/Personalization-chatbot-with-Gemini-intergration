@@ -1,0 +1,747 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="user-profile">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <h2>AI Companion</h2>
+                    <p>Welcome back, <span class="username">{{ username }}</span>!</p>
+                </div>
+            </div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="{{ url_for('dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('chat') }}"><i class="fas fa-comment-dots"></i> AI Chat</a></li>
+            <li><a href="{{ url_for('text_summarize') }}"><i class="fas fa-file-alt"></i> Text Summary</a></li>
+            <li class="active"><a href="{{ url_for('video_summarize') }}"><i class="fas fa-video"></i> Video Summary</a></li>
+            <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <div class="ai-status">
+                <div class="status-dot active"></div>
+                <span>AI System Online</span>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <div class="video-summarize-container">
+            <div class="summarize-header">
+                <h1><i class="fas fa-film"></i> Video Intelligence Summarizer</h1>
+                <p class="subtitle">Extract key insights from any video in seconds</p>
+            </div>
+            
+            <div class="summarize-card">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="url-tab">From URL</button>
+                    <button class="tab-btn" data-tab="transcript-tab">From Transcript</button>
+                </div>
+                
+                <form method="POST" action="{{ url_for('video_summarize') }}" class="summarize-form">
+                    <div class="tab-content active" id="url-tab">
+                        <div class="form-group">
+                            <label for="video_url">
+                                <i class="fas fa-link"></i> Video URL
+                            </label>
+                            <input type="url" id="video_url" name="video_url" 
+                                   placeholder="Paste YouTube, Vimeo, or other video link..." 
+                                   value="{% if video_url %}{{ video_url }}{% endif %}">
+                            <div class="form-note">Supports YouTube, TED Talks, educational videos, and more</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="transcript-tab">
+                        <div class="form-group">
+                            <label for="transcript">
+                                <i class="fas fa-align-left"></i> Video Transcript
+                            </label>
+                            <textarea id="transcript" name="transcript" 
+                                      placeholder="Paste the video transcript here...">{% if transcript %}{{ transcript }}{% endif %}</textarea>
+                            <div class="form-note">For best results, provide complete transcript with timestamps if available</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-options">
+                        <div class="summary-options">
+                            <label>
+                                <input type="checkbox" name="include_key_points" checked>
+                                Include key points
+                            </label>
+                            <label>
+                                <input type="checkbox" name="include_timestamps" checked>
+                                Include timestamps
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-summarize">
+                            <i class="fas fa-compress-alt"></i> Generate Summary
+                        </button>
+                    </div>
+                </form>
+                
+                {% if summary %}
+                <div class="result-container">
+                    <div class="result-header">
+                        <h2><i class="fas fa-clipboard-check"></i> Video Analysis</h2>
+                        <div class="result-actions">
+                            <button class="btn btn-copy" id="copySummary">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                            <button class="btn btn-download">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-box">
+                        <div class="video-preview">
+                            {% if video_url and 'youtube.com' in video_url or 'youtu.be' in video_url %}
+                            <div class="embed-container">
+                                <iframe src="https://www.youtube.com/embed/{{ video_url.split('v=')[1].split('&')[0] }}" 
+                                        frameborder="0" allowfullscreen></iframe>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="summary-content">
+                            <h3>AI-Generated Summary</h3>
+                            {{ summary | safe }}
+                        </div>
+                        
+                        <div class="summary-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Processed in {{ summary|length / 1000|round(2) }} seconds</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-ruler-combined"></i>
+                                <span>{{ (transcript|length / summary|length)|round(1) }}x condensed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-video-slash"></i>
+                    </div>
+                    <h3>No Video Summary Yet</h3>
+                    <p>Enter a video URL or paste a transcript to generate an AI-powered summary</p>
+                    <div class="usage-tips">
+                        <h4>Tips for Best Results:</h4>
+                        <ul>
+                            <li>Use educational or lecture videos for most accurate summaries</li>
+                            <li>For long videos, consider summarizing in sections</li>
+                            <li>Include timestamps in transcripts for reference</li>
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    :root {
+        --primary-color: #6c5ce7;
+        --secondary-color: #a29bfe;
+        --accent-color: #fd79a8;
+        --dark-color: #2d3436;
+        --light-color: #f5f6fa;
+        --success-color: #00b894;
+    }
+    
+    /* Dashboard Layout */
+    .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+        background-color: #f8f9fa;
+    }
+    
+    /* Sidebar Styles */
+    .sidebar {
+        width: 280px;
+        background: linear-gradient(135deg, var(--dark-color) 0%, #1e272e 100%);
+        color: white;
+        padding: 25px 0;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .user-profile {
+        padding: 0 25px 25px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .avatar {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 20px;
+    }
+    
+    .username {
+        color: var(--accent-color);
+        font-weight: 600;
+    }
+    
+    .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 25px 0;
+        flex-grow: 1;
+    }
+    
+    .sidebar-menu li {
+        margin: 5px 0;
+    }
+    
+    .sidebar-menu a {
+        display: flex;
+        align-items: center;
+        padding: 12px 25px;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .sidebar-menu a:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    .sidebar-menu i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .sidebar-menu .active a {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-left: 4px solid var(--accent-color);
+    }
+    
+    .sidebar-footer {
+        padding: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .ai-status {
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+    }
+    
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        background-color: #ccc;
+        border-radius: 50%;
+        margin-right: 8px;
+        position: relative;
+    }
+    
+    .status-dot.active {
+        background-color: var(--success-color);
+    }
+    
+    .status-dot.active::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: var(--success-color);
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 0.7; }
+        70% { transform: scale(2.5); opacity: 0; }
+        100% { transform: scale(1); opacity: 0; }
+    }
+    
+    /* Main Content Styles */
+    .main-content {
+        flex: 1;
+        padding: 40px;
+        background-color: white;
+        overflow-y: auto;
+    }
+    
+    .video-summarize-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .summarize-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .summarize-header h1 {
+        margin: 0;
+        color: var(--dark-color);
+        font-size: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .summarize-header i {
+        margin-right: 15px;
+        color: var(--primary-color);
+    }
+    
+    .subtitle {
+        color: #636e72;
+        margin-top: 10px;
+        font-size: 16px;
+    }
+    
+    /* Summarize Card */
+    .summarize-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eee;
+    }
+    
+    /* Tabs */
+    .tabs {
+        display: flex;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #eee;
+    }
+    
+    .tab-btn {
+        padding: 12px 25px;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        color: #636e72;
+        transition: all 0.3s ease;
+    }
+    
+    .tab-btn.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    /* Form Styles */
+    .summarize-form {
+        margin-bottom: 30px;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-group label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: var(--dark-color);
+    }
+    
+    .form-group i {
+        margin-right: 10px;
+        color: var(--primary-color);
+    }
+    
+    .form-group input[type="url"],
+    .form-group textarea {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .form-group textarea {
+        min-height: 200px;
+        resize: vertical;
+    }
+    
+    .form-group input[type="url"]:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+    }
+    
+    .form-note {
+        font-size: 13px;
+        color: #636e72;
+        margin-top: 8px;
+    }
+    
+    .form-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .summary-options {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .summary-options label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    
+    .summary-options input {
+        margin-right: 8px;
+    }
+    
+    /* Button Styles */
+    .btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn i {
+        margin-right: 8px;
+    }
+    
+    .btn-summarize {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+    }
+    
+    .btn-summarize:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+    }
+    
+    .btn-copy, .btn-download {
+        padding: 8px 15px;
+        background: white;
+        border: 1px solid #e0e0e0;
+        color: var(--dark-color);
+    }
+    
+    .btn-copy:hover, .btn-download:hover {
+        background-color: #f5f5f5;
+    }
+    
+    /* Result Container */
+    .result-container {
+        margin-top: 40px;
+        animation: fadeIn 0.5s ease;
+    }
+    
+    .result-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .result-header h2 {
+        margin: 0;
+        color: var(--dark-color);
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .result-header i {
+        margin-right: 10px;
+        color: var(--primary-color);
+    }
+    
+    .result-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    /* Summary Box */
+    .summary-box {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+    
+    .video-preview {
+        background-color: #f5f5f5;
+        padding: 20px;
+        text-align: center;
+    }
+    
+    .embed-container {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+        overflow: hidden;
+        max-width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .embed-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .summary-content {
+        padding: 25px;
+    }
+    
+    .summary-content h3 {
+        color: var(--primary-color);
+        margin-top: 0;
+    }
+    
+    .summary-content p {
+        line-height: 1.8;
+        margin-bottom: 15px;
+    }
+    
+    .summary-meta {
+        display: flex;
+        gap: 20px;
+        padding: 15px 25px;
+        border-top: 1px solid #eee;
+        background-color: #f9f9f9;
+    }
+    
+    .meta-item {
+        display: flex;
+        align-items: center;
+        color: #636e72;
+    }
+    
+    .meta-item i {
+        margin-right: 8px;
+        color: var(--primary-color);
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        margin-top: 30px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        border: 2px dashed #e0e0e0;
+    }
+    
+    .empty-icon {
+        font-size: 50px;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        opacity: 0.7;
+    }
+    
+    .empty-state h3 {
+        margin: 0 0 10px;
+        color: var(--dark-color);
+    }
+    
+    .empty-state p {
+        color: #636e72;
+        margin: 0 0 25px;
+    }
+    
+    .usage-tips {
+        text-align: left;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .usage-tips h4 {
+        color: var(--dark-color);
+        margin-bottom: 10px;
+    }
+    
+    .usage-tips ul {
+        list-style: none;
+        padding-left: 0;
+    }
+    
+    .usage-tips li {
+        padding: 8px 0;
+        border-bottom: 1px dashed #ddd;
+    }
+    
+    .usage-tips li:last-child {
+        border-bottom: none;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .sidebar {
+            width: 80px;
+        }
+        
+        .sidebar-header h2, 
+        .user-info p,
+        .sidebar-menu span,
+        .ai-status span {
+            display: none;
+        }
+        
+        .avatar {
+            margin-right: 0;
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+        }
+        
+        .sidebar-menu a {
+            justify-content: center;
+            padding: 15px 0;
+        }
+        
+        .sidebar-menu i {
+            margin-right: 0;
+            font-size: 20px;
+        }
+        
+        .sidebar-menu .active a {
+            border-left: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin: 0 auto;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .main-content {
+            padding: 20px;
+        }
+        
+        .summarize-header h1 {
+            font-size: 26px;
+        }
+        
+        .summarize-card {
+            padding: 20px;
+        }
+        
+        .form-options {
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        
+        .summary-options {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .result-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .result-actions {
+            width: 100%;
+            justify-content: flex-end;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Update active tab button
+                tabBtns.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show corresponding content
+                tabContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Copy summary functionality
+        const copyBtn = document.getElementById('copySummary');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', function() {
+                const summaryContent = document.querySelector('.summary-content');
+                if (summaryContent) {
+                    const range = document.createRange();
+                    range.selectNode(summaryContent);
+                    window.getSelection().removeAllRanges();
+                    window.getSelection().addRange(range);
+                    document.execCommand('copy');
+                    window.getSelection().removeAllRanges();
+                    
+                    // Show feedback
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                    }, 2000);
+                }
+            });
+        }
+        
+        // Auto-focus on first input
+        const firstInput = document.querySelector('input, textarea');
+        if (firstInput) {
+            firstInput.focus();
+        }
+    });
+</script>
+{% endblock %}

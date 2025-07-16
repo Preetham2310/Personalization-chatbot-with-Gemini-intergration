@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Text Summarizer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: #1e293b;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px;
+        }
+
+        .sidebar ul li.active a {
+            font-weight: bold;
+            color: #38bdf8;
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            text-align: center;
+            padding: 10px;
+            background-color: #ef4444;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            background-color: #fff;
+        }
+
+        .summarize-header h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .text-input {
+            width: 100%;
+            min-height: 220px;
+            padding: 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            resize: vertical;
+        }
+
+        .text-tools {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tool-btn {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .tool-btn:hover {
+            background-color: #dc2626;
+        }
+
+        .summarize-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .summarize-btn:hover {
+            background-color: #2563eb;
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9fafb;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background-color: #10b981;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .copy-btn:hover {
+            background-color: #059669;
+        }
+
+        .summary-content {
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+
+        .summary-stats {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-item i {
+            margin-right: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                padding: 10px 0;
+            }
+
+            .sidebar ul {
+                flex-direction: row;
+                flex-wrap: wrap;
+                display: flex;
+            }
+
+            .sidebar ul li {
+                margin: 5px 10px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .summarize-header h1 {
+                font-size: 24px;
+            }
+
+            .text-input {
+                min-height: 180px;
+            }
+
+            .result-header h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <h2 class="logo">AI Summarizer</h2>
+            <ul>
+                <li class="{% if request.endpoint == 'dashboard' %}active{% endif %}">
+                    <a href="{{ url_for('dashboard') }}">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="{% if request.endpoint == 'text_summarize' %}active{% endif %}">
+                    <a href="{{ url_for('text_summarize') }}">
+                        <i class="fas fa-align-left"></i> Text Summarization
+                    </a>
+                </li>
+                <li class="{% if request.endpoint == 'video_summarize' %}active{% endif %}">
+                    <a href="{{ url_for('video_summarize') }}">
+                        <i class="fas fa-video"></i> Video Summarization
+                    </a>
+                </li>
+            </ul>
+            <a href="{{ url_for('logout') }}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+
+        <div class="main-content">
+            <div class="summarize-header">
+                <h1>Text Summarization</h1>
+            </div>
+
+            <form method="post" action="{{ url_for('text_summarize') }}">
+                <textarea id="text" name="text" class="text-input" placeholder="Paste your text here...">{{ request.form.text or '' }}</textarea>
+                <div class="text-tools">
+                    <button type="button" class="tool-btn" id="clearText"><i class="fas fa-times"></i> Clear</button>
+                    <span id="charCount">0 characters</span>
+                </div>
+                <button type="submit" class="summarize-btn">Summarize</button>
+            </form>
+
+            {% if summary %}
+            <div class="result-section">
+                <div class="result-header">
+                    <h2>Summary</h2>
+                    <button id="copySummary" class="copy-btn"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <div class="summary-content">
+                    {{ summary|safe }}
+                </div>
+                <div class="summary-stats">
+                    <span class="stat-item"><i class="fas fa-font"></i> {{ summary|length }} characters</span>
+                    <span class="stat-item"><i class="fas fa-sort-numeric-up-alt"></i> {{ summary.split()|length }} words</span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        const textarea = document.getElementById("text");
+        const charCount = document.getElementById("charCount");
+
+        function updateCharCount() {
+            charCount.textContent = `${textarea.value.length} characters`;
+        }
+
+        textarea.addEventListener("input", updateCharCount);
+        window.addEventListener("load", updateCharCount);
+
+        document.getElementById("clearText").addEventListener("click", () => {
+            textarea.value = '';
+            updateCharCount();
+        });
+
+        document.getElementById("copySummary")?.addEventListener("click", function () {
+            const text = document.querySelector(".summary-content").innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Summary copied to clipboard!");
+            });
+        });
+    </script>
+</body>
+
+</html>

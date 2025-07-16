@@ -1,0 +1,347 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="profile-circle">
+                <i class="fas fa-user"></i>
+            </div>
+            <h2>AI Companion</h2>
+            <p>Welcome, <span class="username">{{ username }}</span>!</p>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="{{ url_for('dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li class="active"><a href="{{ url_for('chat') }}"><i class="fas fa-robot"></i> Personal Chat</a></li>
+            <li><a href="{{ url_for('text_summarize') }}"><i class="fas fa-file-alt"></i> Text Summarize</a></li>
+            <li><a href="{{ url_for('video_summarize') }}"><i class="fas fa-video"></i> Video Summarize</a></li>
+            <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </nav>
+    
+    <main class="main-content">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h1><i class="fas fa-comment-dots"></i> Personal AI Assistant</h1>
+                <p class="subtitle">Your personalized AI companion, ready to help!</p>
+            </div>
+            
+            <div class="chat-box">
+                {% if response %}
+                <div class="message user-message">
+                    <div class="message-avatar"><i class="fas fa-user"></i></div>
+                    <div class="message-content">
+                        <p>{{ query }}</p>
+                        <div class="message-time">{{ now.strftime('%I:%M %p') }}</div>
+                    </div>
+                </div>
+                <div class="message bot-message">
+                    <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                    <div class="message-content">
+                        <!-- <p>{{ response | safe }}</p> -->
+                        <div class="response">{{ response|safe }}</div>
+                        <div class="message-time">{{ now.strftime('%I:%M %p') }}</div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="welcome-message">
+                    <div class="welcome-icon"><i class="fas fa-hand-paper"></i></div>
+                    <h3>Hello {{ username }}! 👋</h3>
+                    <p>I'm your personalized AI assistant. Ask me anything and I'll respond based on your preferences!</p>
+                    <div class="suggestions">
+                        <p>Try asking:</p>
+                        <ul>
+                            <li>"What are some books based on my interests?"</li>
+                            <li>"Suggest a weekend activity for me"</li>
+                            <li>"Explain quantum computing simply"</li>
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <form method="POST" action="{{ url_for('chat') }}" class="chat-form">
+                <div class="form-group">
+                    <input type="text" name="query" placeholder="Type your message here..." required autocomplete="off" />
+                    <button type="submit" class="btn btn-primary" aria-label="Send Message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    :root {
+        --primary-color: #6c5ce7;
+        --secondary-color: #a29bfe;
+        --accent-color: #fd79a8;
+        --dark-color: #2d3436;
+        --light-color: #f5f6fa;
+        --user-message-bg: #6c5ce7;
+        --bot-message-bg: #f1f1f1;
+    }
+
+    .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+        background-color: var(--light-color);
+    }
+
+    .sidebar {
+        width: 280px;
+        background: linear-gradient(135deg, var(--dark-color) 0%, #1e272e 100%);
+        color: white;
+        padding: 25px 0;
+    }
+
+    .sidebar-header {
+        padding: 0 25px 25px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .profile-circle {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        border-radius: 50%;
+        margin: 0 auto 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        color: white;
+    }
+
+    .username {
+        color: var(--accent-color);
+        font-weight: 600;
+    }
+
+    .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 25px 0;
+    }
+
+    .sidebar-menu li {
+        margin: 5px 0;
+    }
+
+    .sidebar-menu a {
+        display: flex;
+        align-items: center;
+        padding: 12px 25px;
+        color: white;
+        text-decoration: none;
+    }
+
+    .sidebar-menu .active a {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-left: 4px solid var(--accent-color);
+    }
+
+    .sidebar-menu i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+
+    .main-content {
+        flex: 1;
+        padding: 30px;
+        background-color: white;
+    }
+
+    .chat-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .chat-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .chat-header h1 {
+        color: var(--dark-color);
+        font-size: 28px;
+    }
+
+    .chat-header i {
+        color: var(--primary-color);
+        margin-right: 10px;
+    }
+
+    .subtitle {
+        color: #636e72;
+        margin-top: 8px;
+    }
+
+    .chat-box {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 25px;
+        height: 60vh;
+        overflow-y: auto;
+        border: 1px solid #eee;
+    }
+
+    .message {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .message-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+
+    .bot-message .message-avatar {
+        background-color: var(--dark-color);
+    }
+
+    .message-content {
+        max-width: 75%;
+        padding: 15px 20px;
+        border-radius: 18px;
+        line-height: 1.6;
+        position: relative;
+    }
+
+    .user-message .message-content {
+        background: linear-gradient(135deg, var(--user-message-bg) 0%, var(--secondary-color) 100%);
+        color: white;
+    }
+
+    .bot-message .message-content {
+        background-color: var(--bot-message-bg);
+        color: var(--dark-color);
+    }
+
+    .message-time {
+        font-size: 11px;
+        opacity: 0.7;
+        margin-top: 5px;
+        text-align: right;
+    }
+
+    .welcome-message {
+        text-align: center;
+        padding: 30px 20px;
+    }
+
+    .welcome-icon {
+        font-size: 50px;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+    }
+
+    .welcome-message h3 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    .welcome-message p {
+        color: #636e72;
+        margin-bottom: 25px;
+    }
+
+    .suggestions {
+        background-color: rgba(108, 92, 231, 0.1);
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 25px;
+        text-align: left;
+    }
+
+    .suggestions p {
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+    }
+
+    .suggestions ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .suggestions li {
+        padding: 8px 0;
+        border-bottom: 1px dashed rgba(108, 92, 231, 0.2);
+    }
+
+    .chat-form {
+        background: white;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-group {
+        display: flex;
+    }
+
+    .chat-form input {
+        flex: 1;
+        padding: 15px 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 30px;
+        font-size: 16px;
+    }
+
+    .chat-form input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+
+    .btn-primary {
+        margin-left: 15px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--secondary-color);
+        border-radius: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const chatBox = document.querySelector('.chat-box');
+        if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+
+        const input = document.querySelector('input[name="query"]');
+        if (input) input.focus();
+    });
+</script>
+{% endblock %}

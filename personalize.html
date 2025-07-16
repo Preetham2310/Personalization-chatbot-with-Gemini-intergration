@@ -1,0 +1,586 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="personalize-container">
+    <div class="personalize-progress">
+        <div class="progress-bar" style="width: 0%"></div>
+        <div class="progress-steps">
+            <span class="step active">1</span>
+            <span class="step">2</span>
+            <span class="step">3</span>
+            <span class="step">4</span>
+        </div>
+    </div>
+
+    <div class="personalize-card">
+        <div class="personalize-header">
+            <h1><i class="fas fa-user-cog"></i> Personalize Your AI Companion</h1>
+            <p class="subtitle">Help us understand you better for more relevant responses</p>
+        </div>
+        
+        <form method="POST" action="{{ url_for('personalize') }}" id="personalizeForm">
+            <!-- Question 1: Hobby -->
+            <div class="question-group" data-step="1">
+                <div class="question-header">
+                    <span class="question-number">Q1</span>
+                    <h3>What is your primary hobby or interest?</h3>
+                </div>
+                <div class="options-grid">
+                    <div class="option-card">
+                        <input type="radio" id="q1_1" name="question_1" value="Reading" required>
+                        <label for="q1_1">
+                            <div class="option-icon">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <span class="option-text">Reading</span>
+                        </label>
+                    </div>
+                    <div class="option-card">
+                        <input type="radio" id="q1_2" name="question_1" value="Sports" required>
+                        <label for="q1_2">
+                            <div class="option-icon">
+                                <i class="fas fa-running"></i>
+                            </div>
+                            <span class="option-text">Sports</span>
+                        </label>
+                    </div>
+                    <div class="option-card">
+                        <input type="radio" id="q1_3" name="question_1" value="Music" required>
+                        <label for="q1_3">
+                            <div class="option-icon">
+                                <i class="fas fa-music"></i>
+                            </div>
+                            <span class="option-text">Music</span>
+                        </label>
+                    </div>
+                    <div class="option-card">
+                        <input type="radio" id="q1_4" name="question_1" value="Traveling" required>
+                        <label for="q1_4">
+                            <div class="option-icon">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <span class="option-text">Traveling</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 2: Education -->
+            <div class="question-group" data-step="2">
+                <div class="question-header">
+                    <span class="question-number">Q2</span>
+                    <h3>What is your highest level of education?</h3>
+                </div>
+                <div class="options-grid">
+                    <div class="option-card">
+                        <input type="radio" id="q2_1" name="question_2" value="High School" required>
+                        <label for="q2_1">
+                            <div class="option-icon">
+                                <i class="fas fa-school"></i>
+                            </div>
+                            <span class="option-text">High School</span>
+                        </label>
+                    </div>
+                    <div class="option-card">
+                        <input type="radio" id="q2_2" name="question_2" value="Bachelor's Degree" required>
+                        <label for="q2_2">
+                            <div class="option-icon">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <span class="option-text">Bachelor's Degree</span>
+                        </label>
+                    </div>
+                    <div class="option-card">
+                        <input type="radio" id="q2_3" name="question_2" value="Master's Degree" required>
+                        <label for="q2_3">
+                            <div class="option-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <span class="option-text">Master's Degree</span>
+                        </label>
+                    </div>
+                    <div class="option-card">
+                        <input type="radio" id="q2_4" name="question_2" value="PhD" required>
+                        <label for="q2_4">
+                            <div class="option-icon">
+                                <i class="fas fa-microscope"></i>
+                            </div>
+                            <span class="option-text">PhD</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 3: Entertainment -->
+            <div class="question-group" data-step="3">
+                <div class="question-header">
+                    <span class="question-number">Q3</span>
+                    <h3>What type of entertainment do you prefer?</h3>
+                </div>
+                <div class="options-grid">
+                    <div class="option-card">
+                        <input type="radio" id="q3_1" name="question_3" value="Movies" required>
+                        <label for="q3_1">
+                            <div class="option-icon">
+                                <i class="fas fa-film"></i>
+                            </div>
+                            <span class="option-text">Movies</span>
+                        </label>
+                    </div>
+                    <div class="option-card">
+                        <input type="radio" id="q3_2" name="question_3" value="TV Shows" required>
+                        <label for="q3_2">
+                            <div class="option-icon">
+                                <i class="fas fa-tv"></i>
+                            </div>
+                            <span class="option-text">TV Shows</span>
+                        </label>
+                    </div>
+                    <div class="option-card">
+                        <input type="radio" id="q3_3" name="question_3" value="Video Games" required>
+                        <label for="q3_3">
+                            <div class="option-icon">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                            <span class="option-text">Video Games</span>
+                        </label>
+                    </div>
+                    <div class="option-card">
+                        <input type="radio" id="q3_4" name="question_3" value="Books" required>
+                        <label for="q3_4">
+                            <div class="option-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <span class="option-text">Books</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 4: Weekend Activity -->
+            <div class="question-group" data-step="4">
+                <div class="question-header">
+                    <span class="question-number">Q4</span>
+                    <h3>How do you prefer to spend your weekends?</h3>
+                </div>
+                <div class="options-grid">
+                    <div class="option-card">
+                        <input type="radio" id="q4_1" name="question_4" value="Socializing with friends" required>
+                        <label for="q4_1">
+                            <div class="option-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <span class="option-text">Socializing with friends</span>
+                        </label>
+                    </div>
+                    <div class="option-card">
+                        <input type="radio" id="q4_2" name="question_4" value="Relaxing at home" required>
+                        <label for="q4_2">
+                            <div class="option-icon">
+                                <i class="fas fa-couch"></i>
+                            </div>
+                            <span class="option-text">Relaxing at home</span>
+                        </label>
+                    </div>
+                    <div class="option-card">
+                        <input type="radio" id="q4_3" name="question_4" value="Exploring new places" required>
+                        <label for="q4_3">
+                            <div class="option-icon">
+                                <i class="fas fa-binoculars"></i>
+                            </div>
+                            <span class="option-text">Exploring new places</span>
+                        </label>
+                    </div>
+                    <div class="option-card">
+                        <input type="radio" id="q4_4" name="question_4" value="Working on personal projects" required>
+                        <label for="q4_4">
+                            <div class="option-icon">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
+                            <span class="option-text">Working on personal projects</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-navigation">
+                <button type="button" class="btn btn-outline" id="prevBtn" disabled>
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button type="button" class="btn btn-primary" id="nextBtn">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+                <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">
+                    <i class="fas fa-check-circle"></i> Save Preferences
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    :root {
+        --primary-color: #6c5ce7;
+        --secondary-color: #a29bfe;
+        --accent-color: #fd79a8;
+        --dark-color: #2d3436;
+        --light-color: #f5f6fa;
+        --success-color: #00b894;
+    }
+    
+    .personalize-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #dfe3e8 100%);
+        min-height: 100vh;
+    }
+    
+    .personalize-progress {
+        width: 100%;
+        max-width: 800px;
+        margin-bottom: 30px;
+        position: relative;
+    }
+    
+    .progress-bar {
+        height: 6px;
+        background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        border-radius: 3px;
+        transition: width 0.5s ease;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+    
+    .progress-steps {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .step {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: white;
+        border: 3px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #aaa;
+        transition: all 0.3s ease;
+    }
+    
+    .step.active {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        background-color: rgba(108, 92, 231, 0.1);
+    }
+    
+    .personalize-card {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        width: 100%;
+        max-width: 800px;
+    }
+    
+    .personalize-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .personalize-header h1 {
+        margin: 0;
+        color: var(--dark-color);
+        font-size: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .personalize-header i {
+        margin-right: 15px;
+        color: var(--primary-color);
+    }
+    
+    .subtitle {
+        color: #636e72;
+        margin-top: 10px;
+        font-size: 16px;
+    }
+    
+    .question-group {
+        margin-bottom: 40px;
+        display: none;
+        animation: fadeIn 0.5s ease;
+    }
+    
+    .question-group.active {
+        display: block;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .question-header {
+        margin-bottom: 25px;
+    }
+    
+    .question-number {
+        display: inline-block;
+        background-color: var(--primary-color);
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 30px;
+        margin-right: 10px;
+        font-weight: bold;
+    }
+    
+    .question-group h3 {
+        display: inline;
+        color: var(--dark-color);
+        font-size: 20px;
+    }
+    
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    .option-card {
+        position: relative;
+    }
+    
+    .option-card input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+    }
+    
+    .option-card label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 25px 15px;
+        background-color: white;
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        height: 100%;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .option-card:hover label {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .option-card input[type="radio"]:checked + label {
+        background-color: rgba(108, 92, 231, 0.05);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+    
+    .option-card input[type="radio"]:focus + label {
+        box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+    }
+    
+    .option-icon {
+        font-size: 30px;
+        margin-bottom: 15px;
+        color: var(--primary-color);
+    }
+    
+    .option-card input[type="radio"]:checked + label .option-icon {
+        color: var(--primary-color);
+    }
+    
+    .option-text {
+        font-weight: 500;
+        text-align: center;
+    }
+    
+    .form-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+    }
+    
+    .btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn i {
+        margin: 0 8px;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+    }
+    
+    .btn-outline {
+        background: white;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+    }
+    
+    .btn-outline:hover {
+        background-color: rgba(108, 92, 231, 0.1);
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, var(--success-color) 0%, #55efc4 100%);
+        color: white;
+    }
+    
+    .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 184, 148, 0.3);
+    }
+    
+    @media (max-width: 768px) {
+        .options-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .personalize-header h1 {
+            font-size: 26px;
+        }
+        
+        .personalize-card {
+            padding: 30px 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const questions = document.querySelectorAll('.question-group');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const progressBar = document.querySelector('.progress-bar');
+        const steps = document.querySelectorAll('.step');
+        
+        let currentStep = 0;
+        const totalSteps = questions.length;
+        
+        // Initialize first question
+        showStep(currentStep);
+        
+        // Next button click handler
+        nextBtn.addEventListener('click', function() {
+            if (validateStep(currentStep)) {
+                currentStep++;
+                showStep(currentStep);
+                updateProgress();
+            }
+        });
+        
+        // Previous button click handler
+        prevBtn.addEventListener('click', function() {
+            currentStep--;
+            showStep(currentStep);
+            updateProgress();
+        });
+        
+        function showStep(step) {
+            // Hide all questions
+            questions.forEach(q => q.classList.remove('active'));
+            
+            // Show current question
+            questions[step].classList.add('active');
+            
+            // Update button visibility
+            prevBtn.disabled = step === 0;
+            
+            if (step === totalSteps - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-flex';
+            } else {
+                nextBtn.style.display = 'inline-flex';
+                submitBtn.style.display = 'none';
+            }
+        }
+        
+        function validateStep(step) {
+            const currentQuestion = questions[step];
+            const inputs = currentQuestion.querySelectorAll('input[type="radio"]');
+            let isValid = false;
+            
+            inputs.forEach(input => {
+                if (input.checked) isValid = true;
+            });
+            
+            if (!isValid) {
+                alert('Please select an option to continue');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function updateProgress() {
+            const progress = ((currentStep + 1) / totalSteps) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            steps.forEach((step, index) => {
+                if (index <= currentStep) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+        }
+        
+        // Add animation to option cards when they appear
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.4s ease';
+            observer.observe(card);
+        });
+    });
+</script>
+{% endblock %}

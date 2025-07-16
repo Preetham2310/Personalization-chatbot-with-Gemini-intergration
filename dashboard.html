@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>Personalized AI</h2>
+            <p>Welcome, {{ username }}!</p>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="active"><a href="{{ url_for('dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('chat') }}"><i class="fas fa-robot"></i> Personalized Chat</a></li>
+            <li><a href="{{ url_for('text_summarize') }}"><i class="fas fa-file-alt"></i> Text Summarization</a></li>
+            <li><a href="{{ url_for('video_summarize') }}"><i class="fas fa-video"></i> Video Summarization</a></li>
+            <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </nav>
+    
+    <main class="main-content">
+        <div class="welcome-card">
+            <h1>Welcome to Your Personalized AI Assistant</h1>
+            <p>Get started by selecting one of the options from the sidebar.</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-robot"></i>
+                    <h3>Personalized Chat</h3>
+                    <p>Chat with an AI that understands your preferences and interests.</p>
+                    <a href="{{ url_for('chat') }}" class="btn btn-outline">Try Now</a>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>Text Summarization</h3>
+                    <p>Get concise summaries of long articles or documents.</p>
+                    <a href="{{ url_for('text_summarize') }}" class="btn btn-outline">Try Now</a>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-video"></i>
+                    <h3>Video Summarization</h3>
+                    <p>Extract key points from videos without watching the entire content.</p>
+                    <a href="{{ url_for('video_summarize') }}" class="btn btn-outline">Try Now</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<style>
+    .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+    }
+    
+    .sidebar {
+        width: 250px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px 0;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-header {
+        padding: 0 20px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-header h2 {
+        margin: 0;
+        font-size: 20px;
+    }
+    
+    .sidebar-header p {
+        margin: 5px 0 0;
+        font-size: 14px;
+        opacity: 0.8;
+    }
+    
+    .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+    }
+    
+    .sidebar-menu li {
+        margin: 5px 0;
+    }
+    
+    .sidebar-menu a {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+    
+    .sidebar-menu a:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-menu a i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .sidebar-menu .active a {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-left: 3px solid white;
+    }
+    
+    .main-content {
+        flex: 1;
+        padding: 30px;
+        background-color: #f5f7fa;
+    }
+    
+    .welcome-card {
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .welcome-card h1 {
+        margin-top: 0;
+        color: #333;
+    }
+    
+    .welcome-card p {
+        color: #666;
+        margin-bottom: 30px;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+    }
+    
+    .feature-card {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eee;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .feature-card i {
+        font-size: 30px;
+        color: #667eea;
+        margin-bottom: 15px;
+    }
+    
+    .feature-card h3 {
+        margin: 10px 0;
+        color: #333;
+    }
+    
+    .feature-card p {
+        color: #666;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    
+    .btn-outline {
+        display: inline-block;
+        padding: 8px 15px;
+        border: 1px solid #667eea;
+        color: #667eea;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    
+    .btn-outline:hover {
+        background-color: #667eea;
+        color: white;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,443 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-illustration">
+        <div class="illustration-content">
+            <h2>Your Personalized AI Companion</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <i class="fas fa-robot"></i>
+                    <span>Adapts to your unique preferences</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-brain"></i>
+                    <span>Powered by Gemini AI technology</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Secure and private</span>
+                </div>
+            </div>
+            <div class="testimonial">
+                <p>"This chatbot understands me better than my friends!"</p>
+                <div class="user-badge">
+                    <i class="fas fa-user"></i>
+                    <span>Nagesh Reddy., Daily User</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1 class="auth-title">Join Your AI Companion</h1>
+            <p class="auth-subtitle">Create your account to get started with personalized AI assistance</p>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('register') }}" class="auth-form">
+            <div class="form-group">
+                <label for="username">
+                    <i class="fas fa-user"></i> Username
+                </label>
+                <input type="text" id="username" name="username" placeholder="Enter your preferred username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">
+                    <i class="fas fa-envelope"></i> Email
+                </label>
+                <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">
+                    <i class="fas fa-phone"></i> Phone (Optional)
+                </label>
+                <input type="tel" id="phone" name="phone" placeholder="+1 (___) ___-____">
+            </div>
+            <div class="form-group">
+                <label for="password">
+                    <i class="fas fa-lock"></i> Password
+                </label>
+                <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                <div class="password-strength">
+                    <span class="strength-bar"></span>
+                    <span class="strength-bar"></span>
+                    <span class="strength-bar"></span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+        </form>
+        
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{{ url_for('index') }}">Sign in here</a></p>
+            <div class="auth-divider">
+                <span>or continue with</span>
+            </div>
+            <div class="social-auth">
+                <button class="btn btn-google">
+                    <i class="fab fa-google"></i> Google
+                </button>
+                <button class="btn btn-github">
+                    <i class="fab fa-github"></i> GitHub
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    :root {
+        --primary-color: #6c5ce7;
+        --secondary-color: #a29bfe;
+        --accent-color: #fd79a8;
+        --dark-color: #2d3436;
+        --light-color: #f5f6fa;
+        --success-color: #00b894;
+        --error-color: #d63031;
+    }
+    
+    .auth-container {
+        display: flex;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    }
+    
+    .auth-illustration {
+        flex: 1;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        padding: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .illustration-content {
+        max-width: 500px;
+    }
+    
+    .auth-illustration h2 {
+        font-size: 36px;
+        margin-bottom: 30px;
+        line-height: 1.3;
+    }
+    
+    .features-list {
+        margin-bottom: 40px;
+    }
+    
+    .feature-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        font-size: 18px;
+    }
+    
+    .feature-item i {
+        font-size: 24px;
+        margin-right: 15px;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .testimonial {
+        background-color: rgba(255, 255, 255, 0.15);
+        padding: 20px;
+        border-radius: 10px;
+        font-style: italic;
+        position: relative;
+    }
+    
+    .testimonial::before {
+        content: '"';
+        font-size: 60px;
+        position: absolute;
+        top: -20px;
+        left: 10px;
+        opacity: 0.3;
+    }
+    
+    .user-badge {
+        display: flex;
+        align-items: center;
+        margin-top: 15px;
+    }
+    
+    .user-badge i {
+        font-size: 16px;
+        margin-right: 10px;
+        background-color: transparent;
+    }
+    
+    .auth-card {
+        width: 450px;
+        background: white;
+        padding: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .auth-header {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .auth-title {
+        font-size: 28px;
+        color: var(--dark-color);
+        margin-bottom: 10px;
+    }
+    
+    .auth-subtitle {
+        color: var(--dark-color);
+        opacity: 0.7;
+    }
+    
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--dark-color);
+    }
+    
+    .form-group i {
+        margin-right: 10px;
+        color: var(--primary-color);
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+    }
+    
+    .password-strength {
+        display: flex;
+        gap: 5px;
+        margin-top: 8px;
+    }
+    
+    .strength-bar {
+        flex: 1;
+        height: 4px;
+        background-color: #e0e0e0;
+        border-radius: 2px;
+    }
+    
+    .btn {
+        padding: 15px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn i {
+        margin-right: 10px;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        margin-top: 10px;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+    }
+    
+    .auth-footer {
+        margin-top: 30px;
+        text-align: center;
+    }
+    
+    .auth-footer p {
+        color: var(--dark-color);
+        opacity: 0.8;
+    }
+    
+    .auth-footer a {
+        color: var(--primary-color);
+        font-weight: 500;
+        text-decoration: none;
+    }
+    
+    .auth-divider {
+        display: flex;
+        align-items: center;
+        margin: 20px 0;
+        color: var(--dark-color);
+        opacity: 0.7;
+    }
+    
+    .auth-divider::before,
+    .auth-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background-color: #e0e0e0;
+        margin: 0 10px;
+    }
+    
+    .social-auth {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .btn-google, .btn-github {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #e0e0e0;
+        background: white;
+    }
+    
+    .btn-google:hover {
+        background-color: #f5f5f5;
+    }
+    
+    .btn-github:hover {
+        background-color: #f5f5f5;
+    }
+    
+    .alert {
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    
+    .alert-error {
+        background-color: rgba(214, 48, 49, 0.1);
+        color: var(--error-color);
+        border: 1px solid rgba(214, 48, 49, 0.2);
+    }
+    
+    .alert-success {
+        background-color: rgba(0, 184, 148, 0.1);
+        color: var(--success-color);
+        border: 1px solid rgba(0, 184, 148, 0.2);
+    }
+    
+    @media (max-width: 992px) {
+        .auth-illustration {
+            display: none;
+        }
+        
+        .auth-card {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .auth-card {
+            padding: 30px 20px;
+        }
+        
+        .social-auth {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Password strength indicator
+        const passwordInput = document.getElementById('password');
+        const strengthBars = document.querySelectorAll('.strength-bar');
+        
+        if (passwordInput && strengthBars) {
+            passwordInput.addEventListener('input', function() {
+                const strength = calculateStrength(this.value);
+                updateStrengthIndicator(strength);
+            });
+        }
+        
+        function calculateStrength(password) {
+            let strength = 0;
+            
+            // Length check
+            if (password.length > 0) strength += 1;
+            if (password.length >= 8) strength += 1;
+            
+            // Complexity checks
+            if (/[A-Z]/.test(password)) strength += 1;
+            if (/[0-9]/.test(password)) strength += 1;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+            
+            return Math.min(strength, 3);
+        }
+        
+        function updateStrengthIndicator(strength) {
+            strengthBars.forEach((bar, index) => {
+                if (index < strength) {
+                    bar.style.backgroundColor = [
+                        '#ff4757',  // Weak (red)
+                        '#ffa502',  // Medium (orange)
+                        '#2ed573'   // Strong (green)
+                    ][strength - 1];
+                } else {
+                    bar.style.backgroundColor = '#e0e0e0';
+                }
+            });
+        }
+        
+        // Phone number formatting
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                const x = this.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+                this.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+            });
+        }
+    });
+</script>
+{% endblock %}
